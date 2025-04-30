@@ -54,5 +54,61 @@
                 ]
             }
         ]
+    },
+    {
+        "user_id": 2,
+        "username": "Alice",
+        "surname": "Smith",
+        "accounts": [
+            {
+                "account_id": 101,
+                "balance": 6005.0,
+                "currency": "USD",
+                "transactions": [
+                    {
+                        "transaction_id": 1,
+                        "amount": 1000.0,
+                        "transaction_type": "deposit",
+                        "currency": "USD",
+                        "time_stamp": "2025-04-30T19:32:05.277846"
+                    },
+                    {
+                        "transaction_id": 2,
+                        "amount": 1001.0,
+                        "transaction_type": "deposit",
+                        "currency": "USD",
+                        "time_stamp": "2025-04-30T19:34:42.194807"
+                    },
+                    {
+                        "transaction_id": 3,
+                        "amount": 1001.0,
+                        "transaction_type": "deposit",
+                        "currency": "USD",
+                        "time_stamp": "2025-04-30T19:37:13.198939"
+                    },
+                    {
+                        "transaction_id": 4,
+                        "amount": 1001.0,
+                        "transaction_type": "deposit",
+                        "currency": "USD",
+                        "time_stamp": "2025-04-30T19:39:14.639337"
+                    },
+                    {
+                        "transaction_id": 5,
+                        "amount": 1001.0,
+                        "transaction_type": "deposit",
+                        "currency": "USD",
+                        "time_stamp": "2025-04-30T19:43:39.239642"
+                    },
+                    {
+                        "transaction_id": 6,
+                        "amount": 1001.0,
+                        "transaction_type": "deposit",
+                        "currency": "USD",
+                        "time_stamp": "2025-04-30T19:44:24.761370"
+                    }
+                ]
+            }
+        ]
     }
 ]

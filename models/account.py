@@ -4,11 +4,24 @@ from typing import List
 from models.transaction import Transaction
 
 class Bankaccount:
+    """
+       Represents a bank account with basic operations such as deposit, withdrawal, and transfer.
+       Stores a list of transaction history.
+    """
+
     account_id: int
     balance: int
     currency:str
 
     def __init__(self, account_id, balance, currency)->None:
+        """
+                Initialize a bank account with the given ID, starting balance, and currency.
+
+                :param account_id: Unique identifier for the account
+                :param balance: Initial balance of the account
+                :param currency: Currency type (e.g., 'USD', 'EUR', 'UAN')
+        """
+
         self.account_id = account_id
         self.balance = balance
         self.currency = currency
@@ -16,23 +29,52 @@ class Bankaccount:
 
 
     def get_account_id(self)->int:
+        """
+              Returns the account ID.
+
+              :return: Account identifier
+        """
         return self.account_id
 
     def deposit(self, amount, currency)->None:
-        # Add money to account and write transaction
-        # Тобто у нас э акаунт на який ми хочемо покласти гроші self.balance += amount
-        # Після чого ми створюємо транзакцію прописуємо тип транзакції та час поповнення
-        # Також не забуваємо про транзакшн айді те що айді завжди на 1 збільшується
-        self.balance += amount
-        transaction = Transaction(transaction_id=len(self.transactions)+1,
-                                  amount = amount,
-                                  currency= currency ,
-                                  transaction_type="deposit",
-                                  time_stamp=datetime.now())
-        self.transactions.append(transaction)
+        """
+               Deposits a specified amount to the account, if the currency matches and amount is valid.
+
+               :param amount: The amount to deposit (must be positive number)
+               :param currency: The currency of the deposit (must match account's currency)
+               :return: Result message indicating success or error
+        """
+        try:
+            if not isinstance(amount, (int,float)):
+                raise ValueError("Amount must be of type int or float")
+
+            if amount < 0:
+                raise ValueError("Amount cannot be negative")
+
+            if currency != self.currency:
+                raise ValueError("Currency mismatch")
+
+            self.balance += amount
+            transaction = Transaction(transaction_id=len(self.transactions) + 1,
+                amount=amount,
+                currency=currency,
+                transaction_type="deposit",
+                time_stamp=datetime.now())
+            self.transactions.append(transaction)
+
+            return "Deposit successful"
+        except Exception as e:
+            return f"Deposit error: {e}"
 
     def withdraw(self, amount, currency) -> str:
-       try:
+        """
+               Withdraws a specified amount from the account if sufficient funds and currency match.
+
+               :param amount: The amount to withdraw (must be positive number)
+               :param currency: The currency of the withdrawal (must match account's currency)
+               :return: Result message indicating success or error
+        """
+        try:
            if not isinstance(amount,(int,float)):
                raise ValueError("Value must be a number")
 
@@ -53,10 +95,18 @@ class Bankaccount:
                                               time_stamp=datetime.now())
            self.transactions.append(withdraw_transaction)
            return "Withdrawal was successful"
-       except Exception as e:
+        except Exception as e:
            return f"Withdrawal error:{e}"
 
     def transfer( self,target_account,amount: float,currency: str):
+        """
+                Transfers a specified amount from this account to another account, including currency exchange.
+
+                :param target_account: The target Bankaccount object to receive funds
+                :param amount: The amount to transfer
+                :param currency: The currency of the transfer (must match this account's currency)
+                :return: Result message indicating success or error
+        """
         try:
             if amount <= 0:
                 raise ValueError("The transfer amount must be greater than 0..")
@@ -74,7 +124,6 @@ class Bankaccount:
 
             converted_amount = round(amount * exchange_rate,2)
 
-            # Знімаємо з поточного акаунта
             self.balance -= amount
             self.transactions.append(
                 Transaction(
@@ -84,7 +133,6 @@ class Bankaccount:
                     transaction_type=f"transfer_to_{target_account.get_account_id()}",
                     time_stamp=datetime.now()))
 
-            # Додаємо на акаунт одержувача
             target_account.balance += converted_amount
             target_account.transactions.append(
                 Transaction(transaction_id=len(target_account.transactions) + 1,
@@ -94,7 +142,8 @@ class Bankaccount:
                     time_stamp=datetime.now()
                 ))
 
-            return f"Transfer completed. {amount} {self.currency} → {converted_amount} {target_account.currency}"
+            formated_amount = int(converted_amount) if converted_amount.is_integer() else converted_amount
+            return f"Transfer completed. {amount} {self.currency} → {formated_amount} {target_account.currency}"
 
         except ValueError as e:
             return f"Transfer error: {str(e)}"
@@ -102,6 +151,14 @@ class Bankaccount:
 
     @staticmethod
     def get_exchange_rate(from_currency: str, to_currency: str) -> float:
+        """
+                Retrieves the exchange rate between two currencies.
+
+                :param from_currency: Currency to convert from
+                :param to_currency: Currency to convert to
+                :return: Exchange rate as a float, or None if unavailable
+                """
+        ...
         exchange_rates = {
             ('USD', 'UAN'): 39.5,
             ('UAN', 'USD'): 1 / 39.5,
@@ -116,13 +173,27 @@ class Bankaccount:
         return exchange_rates.get((from_currency, to_currency), None)
 
     def get_balance(self):
+        """
+               Returns the current balance of the account.
+
+               :return: Current account balance
+        """
         return self.balance
 
     def get_transactions(self):
+        """
+              Returns a list of all transaction objects associated with this account.
+
+              :return: List of Transaction objects
+              """
         return self.transactions
 
 
     def to_dict(self):
+        """
+               Converts the account data to a dictionary format for serialization.
+               :return: Dictionary with account data
+        """
         return {"account_id": self.account_id,
                 "balance": self.balance,
                 "currency": self.currency,
@@ -130,13 +201,23 @@ class Bankaccount:
 
     @staticmethod
     def from_dict(data):
-        account = Bankaccount(
-            account_id=data["account_id"],
-            balance=data["balance"],
-            currency=data["currency"]
-        )
-        for tr_data in data.get("transactions", []):
-            transaction = Transaction.from_dict(tr_data)
-            account.transactions.append(transaction)
+        """
+            Creates a Bankaccount instance from a dictionary of saved data.
+            :param data: Dictionary with keys 'account_id', 'balance', 'currency', and 'transactions'
+            :return: Bankaccount instance or None if error occurs
+        """
+        try:
+            account = Bankaccount(account_id=data["account_id"],
+                                  balance=data["balance"],
+                                  currency=data["currency"])
+
+            for tr_data in data.get("transactions", []):
+                transaction = Transaction.from_dict(tr_data)
+                account.transactions.append(transaction)
+
             return account
+        except (ValueError, KeyError) as e:
+            print("Error loading account from dict")
+            return None
+
 

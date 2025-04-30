@@ -5,6 +5,7 @@ from service.file_manager import FileManager
 from service.account_service import AccountService
 from service.user_service import  Userservice
 
+
 def console_vision(user_id: int):
     users = FileManager.load_all_users()
     user = next((u for u in users if u.user_id == user_id), None)
@@ -61,5 +62,5 @@ def main():
 
 if __name__ == "__main__":
     main()
-    console_vision(1)
+    console_vision(2)
 
