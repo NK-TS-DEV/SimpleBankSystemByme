@@ -158,7 +158,7 @@ class Bankaccount:
                 :param to_currency: Currency to convert to
                 :return: Exchange rate as a float, or None if unavailable
                 """
-        ...
+
         exchange_rates = {
             ('USD', 'UAN'): 39.5,
             ('UAN', 'USD'): 1 / 39.5,

@@ -1,8 +1,89 @@
 import unittest
 from unittest.mock import patch, MagicMock
+import pytest
 from service.account_service import AccountService
 from models.account import Bankaccount
 from models.user import User
+
+
+@pytest.mark.parametrize(
+    "account_id, balance, currency",
+    [
+        (1, 0.0, "USD"),
+        (2, 100.5, "EUR"),
+        (3, 9999.99, "UAN"),
+    ]
+)
+def test_create_bank_account(account_id, balance, currency):
+    """
+    Test that a bank account is created with correct initial data.
+    """
+    account = AccountService.create_bank_account(account_id, balance, currency)
+    assert isinstance(account, Bankaccount)
+    assert account.account_id == account_id
+    assert account.balance == balance
+    assert account.currency == currency
+
+
+@pytest.mark.parametrize(
+    "initial_balance, deposit_amount, currency, expected_balance",
+    [
+        (100, 50, "USD", 150),
+        (0, 500, "EUR", 500),
+        (20, 0, "UAN", 20),
+    ]
+)
+def test_deposit_to_account(initial_balance, deposit_amount, currency, expected_balance):
+    """
+    Test that depositing to an account updates the balance correctly.
+    """
+    account = Bankaccount(account_id=1, balance=initial_balance, currency=currency)
+    result = AccountService.deposit_to_account(account, deposit_amount, currency)
+    assert account.get_balance() == expected_balance
+    assert account.get_transactions()[-1].transaction_type == "deposit"
+
+
+@pytest.mark.parametrize(
+    "initial_balance, withdraw_amount, currency, expected_balance",
+    [
+        (200, 100, "USD", 100),
+        (300, 300, "EUR", 0),
+    ]
+)
+def test_withdraw_from_account(initial_balance, withdraw_amount, currency, expected_balance):
+    """
+    Test successful withdrawals using AccountService.
+    """
+    account = Bankaccount(account_id=1, balance=initial_balance, currency=currency)
+    result = AccountService.withdraw_from_account(account, withdraw_amount, currency)
+    assert result == "Withdrawal was successful"
+    assert account.get_balance() == expected_balance
+    assert account.get_transactions()[-1].transaction_type == "withdraw"
+
+
+@pytest.mark.parametrize(
+    "from_balance, to_balance, amount, currency, expected_from, expected_to",
+    [
+        (1000, 500, 200, "USD", 800, 700),
+        (50, 0, 25, "EUR", 25, 25),
+    ]
+)
+def test_transfer_between_accounts(from_balance, to_balance, amount, currency, expected_from, expected_to):
+    """
+    Test that transfers between accounts update balances correctly.
+    """
+    acc1 = Bankaccount(account_id=1, balance=from_balance, currency=currency)
+    acc2 = Bankaccount(account_id=2, balance=to_balance, currency=currency)
+    result = AccountService.transfer_between_accounts(acc1, acc2, amount, currency)
+    assert "Transfer completed" in result
+    assert acc1.get_balance() == expected_from
+    assert acc2.get_balance() == expected_to
+    assert acc1.get_transactions()[-1].transaction_type.startswith("transfer_to")
+    assert acc2.get_transactions()[-1].transaction_type.startswith("transfer_from")
+
+
+
+
 
 
 class TestAccountService(unittest.TestCase):
@@ -63,7 +144,7 @@ class TestAccountService(unittest.TestCase):
         with patch("builtins.print") as mock_print:
             AccountService.create_account(args)
             self.assertTrue(any(acc.account_id == 999 for acc in self.user.get_account()))
-            mock_print.assert_called_with(f"🏦 Creating account ID 999 by user Test")
+            mock_print.assert_called_with(f"Creating account ID 999 by user Test")
 
     @patch("service.account_service.FileManager.save_all_users")
     @patch("service.account_service.FileManager.load_all_users")

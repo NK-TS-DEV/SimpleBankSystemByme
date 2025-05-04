@@ -1,7 +1,51 @@
 import unittest
 from unittest.mock import patch, MagicMock
+import pytest
 from service.user_service import Userservice
 from models.user import User
+
+
+@pytest.mark.parametrize(
+    "existing_users, new_username, new_surname, expected_id",
+    [
+        ([], "Alice", "Smith", 1),
+        ([User(user_id=1, username="John", surname="Doe")], "Mark", "Twain", 2),
+        ([User(user_id=1, username="John", surname="Doe"), User(user_id=3, username="Anna", surname="Lee")], "Tim", "Cook", 4),
+    ]
+)
+def test_register_user_assigns_correct_id(existing_users, new_username, new_surname, expected_id):
+    with patch("service.user_service.FileManager.load_all_users", return_value=existing_users):
+        with patch("service.user_service.FileManager.save_all_users") as mock_save:
+            args = MagicMock()
+            args.username = new_username
+            args.surname = new_surname
+            Userservice.register(args)
+
+            saved_users = mock_save.call_args[0][0]
+            assert saved_users[-1].user_id == expected_id
+            assert saved_users[-1].username == new_username
+            assert saved_users[-1].surname == new_surname
+            assert isinstance(saved_users[-1], User)
+
+
+@pytest.mark.parametrize(
+    "user_id, expected_output",
+    [
+        (1, "Hi, Alice Smith!"),
+        (999, "User not found"),
+        ("abc", "User not found")
+    ]
+)
+def test_login_output(monkeypatch, user_id, expected_output):
+    users = [User(user_id=1, username="Alice", surname="Smith")]
+    monkeypatch.setattr("service.user_service.FileManager.load_all_users", lambda: users)
+
+    args = MagicMock()
+    args.user_id = user_id
+
+    with patch("builtins.print") as mock_print:
+        Userservice.login(args)
+        mock_print.assert_called_with(expected_output)
 
 
 class TestUserService(unittest.TestCase):
