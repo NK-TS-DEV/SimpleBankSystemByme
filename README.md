@@ -1,6 +1,6 @@
 # Simple Bank System
 
-#### A simple library management system implemented in Python with unit tests.
+#### A simple bank system implemented in Python with unit tests.
 
 # **Features**
 

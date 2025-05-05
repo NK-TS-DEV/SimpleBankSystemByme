@@ -216,7 +216,7 @@ class Bankaccount:
                 account.transactions.append(transaction)
 
             return account
-        except (ValueError, KeyError) as e:
+        except (ValueError, KeyError):
             print("Error loading account from dict")
             return None
 
