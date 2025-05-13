@@ -1,3 +1,5 @@
+"""Initialization for unit test package of the SimpleBankSystem."""
+
 from service.user_service import *
 from service.account_service import *
 from service.file_manager import *

@@ -1,9 +1,7 @@
 import argparse
-from models.user import User
-from models.account import Bankaccount
 from service.file_manager import FileManager
 from service.account_service import AccountService
-from service.user_service import  Userservice
+from service.user_service import Userservice
 
 
 def console_vision(user_id: int):
@@ -40,7 +38,6 @@ def main():
     withd.add_argument("--amount", type=float, required=True)
     withd.set_defaults(func=AccountService.withdraw)
 
-
     dep = subparsers.add_parser("deposit", help="Account replenishment")
     dep.add_argument("--user-id", type=int, required=True)
     dep.add_argument("--account-id", type=int, required=True)
@@ -55,12 +52,12 @@ def main():
     trans.set_defaults(func=AccountService.transfer)
 
     args = parser.parse_args()
-    if hasattr(args, 'func'):
+    if hasattr(args, "func"):
         args.func(args)
     else:
         parser.print_help()
 
+
 if __name__ == "__main__":
     main()
     console_vision(2)
-
