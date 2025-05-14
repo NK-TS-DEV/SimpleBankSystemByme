@@ -48,7 +48,7 @@ SimpleBankSystem/
 2. Install dependencies (if necessary): pip install -r requirements.txt
 
 ## 🧪Running Tests
-Run all tests with: python -m unittest discover tests
+Run all tests with: python -m unittest discover test
 
 
 ## ⚙️ CLI Usage Examples
