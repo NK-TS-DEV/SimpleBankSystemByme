@@ -16,25 +16,26 @@
 ```
 SimpleBankSystem/
 ├── data/
-│   └── users.json
+│ └── users.json
 ├── models/
-│   ├── __init__.py
-│   ├── account.py
-│   ├── transaction.py
-│   └── user.py
+│ ├── init.py
+│ ├── account.py
+│ ├── transaction.py
+│ └── user.py
 ├── service/
-│   ├── __init__.py
-│   ├── account_service.py
-│   ├── file_manager.py
-│   └── user_service.py
-├── Test/
-│   ├── __init__.py
-│   ├── test_account.py
-│   ├── test_account_service.py
-│   ├── test_filemanager.py
-│   ├── test_transaction.py
-│   ├── test_user.py
-│   └── test_userservice.py
+│ ├── init.py
+│ ├── account_service.py
+│ ├── file_manager.py
+│ └── user_service.py
+├── test/
+│ ├── init.py
+│ ├── test_account.py
+│ ├── test_account_service.py
+│ ├── test_filemanager.py
+│ ├── test_transaction.py
+│ ├── test_user.py
+│ ├── test_userservice.py
+│ └── test_parametrize_*.py # Parametrized tests
 ├── main.py
 ├── README.md
 ├── requirements.txt
@@ -54,7 +55,7 @@ Run all tests with: python -m unittest discover tests
 
 ```python
 from models.user import User
-from models.account import Bankaccount
+from models.account import BankAccount
 from service.account_service import AccountService
 
 # ✅ Create a new user
@@ -80,3 +81,8 @@ print(user.get_total_balance())  # Output: 450.0
 
 # ✅ Print summary report
 user.print_summary()
+```
+
+## License
+
+This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.

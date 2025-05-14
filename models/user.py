@@ -1,3 +1,4 @@
+# pylint: disable=C0301
 """Module defining the User class for banking system operations."""
 
 from typing import List
@@ -129,6 +130,20 @@ class User:
         :param data: Dictionary with user fields and account data
         :return: Initialized User object
         """
+        # Code borrowed from: https://github.com/pjastr/PFsample/blob/master/src/user.py
+        # Author: pjastr
+        # Date of download: 2025-04-25
+        # License: MIT
+        #
+        # Modifications by Alina Upyrova:
+        # - Only the conceptual idea (serialization/deserialization) was reused
+        # - Completely rewrote the implementation for a different domain (BankAccount instead of User)
+        # - Changed return type from JSON string to Python dictionary
+        # - Removed all JSON-related logic (json.dumps/json.loads)
+        # - Added support for nested object serialization (Transaction list)
+        # - Added error handling for missing or invalid data
+        # - Applied PEP8 naming and static typing
+
         user = User(
             username=data["username"], surname=data["surname"], user_id=data["user_id"]
         )
@@ -150,6 +165,20 @@ class User:
         Converts the User object into a dictionary suitable for JSON serialization.
         :return: Dictionary containing user data and list of account dictionaries
         """
+        # Code borrowed from: https://github.com/pjastr/PFsample/blob/master/src/user.py
+        # Author: pjastr
+        # Date of download: 2025-04-25
+        # License: MIT
+        #
+        # Modifications by Alina Upyrova :
+        # - Only the conceptual idea (serialization/deserialization) was reused
+        # - Completely rewrote the implementation for a different domain (BankAccount instead of User)
+        # - Changed return type from JSON string to Python dictionary
+        # - Removed all JSON-related logic (json.dumps/json.loads)
+        # - Added support for nested object serialization (Transaction list)
+        # - Added error handling for missing or invalid data
+        # - Applied PEP8 naming and static typing
+
         return {
             "user_id": self.user_id,
             "username": self.username,

@@ -1,3 +1,5 @@
+# pylint: disable=C0301
+
 """Defines the BankAccount model with operations for deposit, withdrawal,
 transfer, and transaction history."""
 
@@ -46,12 +48,15 @@ class BankAccount:
         :param currency: The currency of the deposit (must match account's currency)
         :return: Result message indicating success or error
         """
-        # Код запозичено з: [ПОВНА URL-АДРЕСА ДО ДЖЕРЕЛА]
-        # Автор: [ІМ'Я ТА ПРІЗВИЩЕ АВТОРА АБО ІМ'Я КОРИСТУВАЧА]
-        # Дата завантаження: [РРРР-ММ-ДД]
-        # Ліцензія: [ТИП ЛІЦЕНЗІЇ, НАПР. MIT, GPL, CC BY-SA 4.0]
+        # Code borrowed from: https://github.com/Pavansomisetty21/Online-Banking-System-using-Python-and-MongoDB/blob/main/banking.py
+        # Author: Pavansomisetty21
+        # Date downloaded: 2025-04-25
+        # License: MIT
         #
-        # Зміни: [ОПИС ЗМІН, ВНЕСЕНИХ ТОБОЮ, ЯКЩО Є]
+        # Modifications  by Alina Upyrova:
+        # - Removed MongoDB write operations
+        # - Added type annotations and error handling
+        # - Refactored transaction recording using local list
 
         try:
             if not isinstance(amount, (int, float)):
@@ -86,12 +91,15 @@ class BankAccount:
         :return: Result message indicating success or error
         """
 
-        # Код запозичено з: [ПОВНА URL-АДРЕСА ДО ДЖЕРЕЛА]
-        # Автор: [ІМ'Я ТА ПРІЗВИЩЕ АВТОРА АБО ІМ'Я КОРИСТУВАЧА]
-        # Дата завантаження: [РРРР-ММ-ДД]
-        # Ліцензія: [ТИП ЛІЦЕНЗІЇ, НАПР. MIT, GPL, CC BY-SA 4.0]
+        # Code borrowed from: https://github.com/Pavansomisetty21/Online-Banking-System-using-Python-and-MongoDB/blob/main/banking.py
+        # Author: Pavansomisetty21
+        # Date downloaded: 2025-04-25
+        # License: MIT
         #
-        # Зміни: [ОПИС ЗМІН, ВНЕСЕНИХ ТОБОЮ, ЯКЩО Є]
+        # Modifications by Alina Upyrova:
+        # - Removed MongoDB write operations
+        # - Added type annotations and error handling
+        # - Refactored transaction recording using local list
         try:
             if not isinstance(amount, (int, float)):
                 raise ValueError("Value must be a number")
@@ -130,12 +138,20 @@ class BankAccount:
         :param currency: The currency of the transfer (must match this account's currency)
         :return: Result message indicating success or error
         """
-        # Код запозичено з: [ПОВНА URL-АДРЕСА ДО ДЖЕРЕЛА]
-        # Автор: [ІМ'Я ТА ПРІЗВИЩЕ АВТОРА АБО ІМ'Я КОРИСТУВАЧА]
-        # Дата завантаження: [РРРР-ММ-ДД]
-        # Ліцензія: [ТИП ЛІЦЕНЗІЇ, НАПР. MIT, GPL, CC BY-SA 4.0]
+        # Code borrowed from: https://github.com/Pavansomisetty21/Online-Banking-System-using-Python-and-MongoDB/blob/main/banking.py
+        # Author: Pavansomisetty21
+        # Date of download: 2025-04-25
+        # License: MIT
         #
-        # Зміни: [ОПИС ЗМІН, ВНЕСЕНИХ ТОБОЮ, ЯКЩО Є]
+        # Modifications by Alina Upyrova:
+        # - Removed MongoDB integration and all database dependencies
+        # - Added static typing annotations
+        # - Reorganized and simplified method structure
+        # - Added exception handling for input validation
+        # - Refactored method and variable names to follow PEP8
+        # - Separated data model (Transaction) from logic
+        # - Improved currency conversion handling
+
         try:
             if amount <= 0:
                 raise ValueError("The transfer amount must be greater than 0..")
@@ -199,13 +215,6 @@ class BankAccount:
         :return: Exchange rate as a float, or None if unavailable
         """
 
-        # Код запозичено з: [ПОВНА URL-АДРЕСА ДО ДЖЕРЕЛА]
-        # Автор: [ІМ'Я ТА ПРІЗВИЩЕ АВТОРА АБО ІМ'Я КОРИСТУВАЧА]
-        # Дата завантаження: [РРРР-ММ-ДД]
-        # Ліцензія: [ТИП ЛІЦЕНЗІЇ, НАПР. MIT, GPL, CC BY-SA 4.0]
-        #
-        # Зміни: [ОПИС ЗМІН, ВНЕСЕНИХ ТОБОЮ, ЯКЩО Є]
-
         exchange_rates = {
             ("USD", "UAN"): 39.5,
             ("UAN", "USD"): 1 / 39.5,
@@ -240,6 +249,19 @@ class BankAccount:
         Converts the account data to a dictionary format for serialization.
         :return: Dictionary with account data
         """
+        # Code borrowed from: https://github.com/pjastr/PFsample/blob/master/src/user.py
+        # Author: pjastr
+        # Date of download: 2025-04-25
+        # License: MIT
+        #
+        # Modifications by Alina Upyrova:
+        # - Only the conceptual idea (serialization/deserialization) was reused
+        # - Completely rewrote the implementation for a different domain (BankAccount instead of User)
+        # - Changed return type from JSON string to Python dictionary
+        # - Removed all JSON-related logic (json.dumps/json.loads)
+        # - Added support for nested object serialization (Transaction list)
+        # - Added error handling for missing or invalid data
+        # - Applied PEP8 naming and static typing
         return {
             "account_id": self.account_id,
             "balance": self.balance,
@@ -254,6 +276,20 @@ class BankAccount:
         :param data: Dictionary with keys 'account_id', 'balance', 'currency', and 'transactions'
         :return: Bankaccount instance or None if error occurs
         """
+        # Code borrowed from: https://github.com/pjastr/PFsample/blob/master/src/user.py
+        # Author: pjastr
+        # Date of download: 2025-04-25
+        # License: MIT
+        #
+        # Modifications by Alina Upyrova:
+        # - Only the conceptual idea (serialization/deserialization) was reused
+        # - Completely rewrote the implementation for a different domain (BankAccount instead of User)
+        # - Changed return type from JSON string to Python dictionary
+        # - Removed all JSON-related logic (json.dumps/json.loads)
+        # - Added support for nested object serialization (Transaction list)
+        # - Added error handling for missing or invalid data
+        # - Applied PEP8 naming and static typing
+
         try:
             account = BankAccount(
                 account_id=data["account_id"],
